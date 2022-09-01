@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fragatta - Web Socket</title>
+  </head>
+  <body>
+    <h1>Fragatta App</h1>
+
+    <input type="text" id="palavra" placeholder="Insira a palavra">
+    <button onclick="enviar()" id="btnEnviar">Enviar</button>
+
+    <p id="resultado"></p>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // apontando a url do servidor para o client se conectar
+      const SERVER_URL = 'http://localhost:5000';
+      // abrindo uma conexão do client com o servidor
+      const socket = io(SERVER_URL);
+
+      // disparando evento para o servidor
+      // socket.emit('nome_do_evento', { dado });
+      socket.emit('welcome', { name: 'Lucas Leoni' });
+      console.log('SERVIDOR RECEBEU O EVENTO WELCOME?');
+
+      function enviar() {
+        const wordField = document.getElementById('palavra');
+        console.log(wordField.value);
+        socket.emit('palavra', wordField.value);
+      };
+
+      socket.on('resultado', (data) => {
+        console.log('Resultado chegou no client: ', data);
+        const resultado = document.getElementById('resultado');
+        resultado.textContent = data;
+      });
+    </script>
+  </body>
+</html>
